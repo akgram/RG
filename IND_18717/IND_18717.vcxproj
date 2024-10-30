@@ -208,6 +208,8 @@
     <ResourceCompile Include="IND18717.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\cactus_part.emf" />
+    <None Include="..\..\cactus_part_light.emf" />
     <None Include="res\IND18717.rc2" />
   </ItemGroup>
   <ItemGroup>

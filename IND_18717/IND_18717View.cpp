@@ -66,70 +66,15 @@ void CIND18717View::OnDraw(CDC* pDC)
 	int radius = 0.07 * width; // poluprecnik
 
 	CPen pen(PS_SOLID, 5, RGB(255, 255, 0));  // Cyan boja za konture
-	CBrush orangeBrush(RGB(255, 165, 0));     // orange
-	CBrush purpleBrush(RGB(128, 0, 128));     // purple
-	CBrush pinkBrush(RGB(255, 182, 193));     // pink
-	CBrush bgBrush(RGB(192, 192, 192));       // gray background
-	CBrush red(RGB(255, 0, 0));				  // red
-	CBrush yellow(RGB(255, 255, 0));          // yellow
-	CBrush green(RGB(0, 255, 0));			  // green
-
-	CBrush hatchBrush(HS_DIAGCROSS , RGB(0, 0, 255)); // sara sa kosim linijama
+	CBrush bgBrush(RGB(0, 255, 255));       // cyan background
 
 	pDC->FillRect(CRect(0, 0, width, height), &bgBrush); // pozadina
 
 	CPen* pOldPen = pDC->SelectObject(&pen);
 
-	// Crtanje gornjeg dela
-	pDC->SelectObject(&orangeBrush);
-	CPoint leftHalf[3] = { {int(0.5 * width), int(0.35 * height)}, {int(0.5 * width), int(0.54 * height)}, {int(0.7 * width), int(0.35 * height)} };
-	pDC->Polygon(leftHalf, 3);
-
-	// Crtanje donjeg dela
-	pDC->SelectObject(&pinkBrush);
-	CPoint top[3] = { {int(0.7 * width), int(0.54 * height)}, {int(0.3 * width), int(0.95 * height)}, {int(0.7 * width), int(0.95 * height)} };
-	pDC->Polygon(top, 3);
-
-	pDC->SelectObject(&yellow);
-	CPoint right[3] = { {int(0.3 * width), int(0.54 * height)}, {int(0.5 * width), int(0.54 * height)}, {int(0.5 * width), int(0.75 * height)} };
-	pDC->Polygon(right, 3);
-
-	pDC->SelectObject(&purpleBrush);
-	RECT rectangle1 = { int(0.3 * width), int(0.35 * height), int(0.5 * width), int(0.54 * height) };
-	pDC->Rectangle(&rectangle1);
-
-	pDC->SelectObject(&red);
-	CPoint left[3] = { {int(0.5 * width) , int(0.05 * height)}, {int(0.2 * width), int(0.35 * height)}, {int(0.8 * width), int(0.35 * height)} };
-	pDC->Polygon(left, 3);
-
-	pDC->SelectObject(&green);
-	CPoint rect[4] = { {int(0.7 * width), int(0.35 * height)}, {int(0.5 * width), int(0.54 * height)}, {int(0.5 * width), int(0.75 * height)}, {int(0.7 * width), int(0.54 * height)} };
-	pDC->Polygon(rect, 4);
-
-	pDC->SelectObject(&hatchBrush);
-	CPoint shrafura[3] = { {int(0.3 * width), int(0.54 * height)}, {int(0.5 * width), int(0.75 * height)}, {int(0.3 * width), int(0.95 * height)} };
-	pDC->Polygon(shrafura, 3);
-
-	//int Mx = (int(0.55 * width)) / 2;
-	//int My = (int(0.55 * height)) / 2;
-
-	//int Mx_norm = (Mx + int(0.5 * width)) / 2;
-	//int My_norm = (My + int(0.5 * height)) / 2;
-
-
-	//Mnogouglovi
-	CPen pen1(PS_SOLID, 3, RGB(255, 255, 0));
-	pDC->SelectObject(&pen1);
-	pDC->SelectStockObject(NULL_BRUSH);
-	DrawRegularPolygon(pDC, 0.38 * width, 0.75 * height, radius * 0.6, 6, 0); // srafura
-	DrawRegularPolygon(pDC, 0.58 * width, 0.82 * height, radius, 4, 0); // pink
-	//DrawRegularPolygon(pDC, 0.5 * width, 0.125 * height * 5, radius * 0.71, 7, 0); // pink
-	DrawRegularPolygon(pDC, 0.50 * width, 0.22 * height, radius * 0.8, 5, 0); // red
-	DrawRegularPolygon(pDC, 0.56 * width, 0.4 * height, radius * 0.4, 8, 0); // orange
-
 	// Crtanje mreže (grid)
-	CPen pen2(TRANSPARENT, 2, RGB(220, 220, 220));
-	pDC->SelectObject(&pen2);
+	CPen grids(TRANSPARENT, 2, RGB(240, 240, 240));
+	pDC->SelectObject(&grids);
 	if (showGrid) // showGrid je bool koji kontroliše da li se mreža iscrtava
 	{
 		int gridSpacing = 0.05 * width; // Razmak između linija mreže
@@ -151,22 +96,19 @@ void CIND18717View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	CView::OnKeyDown(nChar, nRepCnt, nFlags);
 }
 
-void CIND18717View::DrawRegularPolygon(CDC* pDC, int cx, int cy, int r, int n, float rotAngle)
+void CIND18717View::Translate(CDC* pDC, float dX, float dY, bool rightMultiply)
 {
-	if (n < 3) return;
 
-	CPoint* points = new CPoint[n];
+}
 
-	float angleStep = 2 * 3.14159265359f / n; // ugao izmedju susednih temena
-	for (int i = 0; i < n; ++i)
-	{
-		float angle = i * angleStep + rotAngle; // trenutni ugao uz rotaciju
-		points[i].x = cx + r * cos(angle);
-		points[i].y = cy + r * sin(angle);
-	}
+void CIND18717View::Scale(CDC* pDC, float sX, float sY, bool rightMultiply)
+{
 
-	pDC->Polygon(points, n);
-	delete[] points;
+}
+
+void CIND18717View::Rotate(CDC* pDC, float angle, bool rightMultiply)
+{
+
 }
 
 

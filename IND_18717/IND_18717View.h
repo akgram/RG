@@ -21,10 +21,12 @@ public:
 // Overrides
 public:
 	virtual void OnDraw(CDC* pDC);  // overridden to draw this view
-
-	void DrawRegularPolygon(CDC* pDC, int cx, int cy, int r, int n, float rotAngle);
 	bool showGrid = false; // Da li je mreža uključena
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+
+	void Translate(CDC* pDC, float dX, float dY, bool rightMultiply);
+	void Scale(CDC* pDC, float sX, float sY, bool rightMultiply);
+	void Rotate(CDC* pDC, float angle, bool rightMultiply);
 
 
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
