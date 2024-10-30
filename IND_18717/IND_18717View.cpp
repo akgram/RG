@@ -72,6 +72,22 @@ void CIND18717View::OnDraw(CDC* pDC)
 
 	CPen* pOldPen = pDC->SelectObject(&pen);
 
+	pDC->Ellipse(0.48 * width, 0.83 * height, 0.52 * width, 0.88 * height);
+
+	CString EMFname = CString("C:\\Users\\krstic\\Desktop\\RG\\cactus_part_light.emf");
+	HENHMETAFILE Meta = GetEnhMetaFile(EMFname);
+
+	if (Meta == NULL) {
+		AfxMessageBox(_T("Nije moguće učitati WMF fajl."));
+		return;
+	}
+
+	pDC->PlayMetaFile(Meta, CRect(0.45 * width, 0.7 * height, 0.55 * width, 0.85 * height));
+	//pDC->PlayEnhMetaFile(Meta, CRect(0, 0, 800, 600));
+	//DeleteMetaFile(Meta);
+
+
+
 	// Crtanje mreže (grid)
 	CPen grids(TRANSPARENT, 2, RGB(240, 240, 240));
 	pDC->SelectObject(&grids);

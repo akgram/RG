@@ -66,10 +66,10 @@
     <None Include="res\IND18717.rc2">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\cactus_part.emf">
+    <None Include="..\..\cactus_part_light.emf">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\cactus_part_light.emf">
+    <None Include="..\..\cactus_part.emf">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
