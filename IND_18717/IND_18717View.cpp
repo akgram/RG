@@ -94,11 +94,10 @@ void CIND18717View::OnDraw(CDC* pDC)
 	XFORM xFormOld;
 	bool b = pDC->GetWorldTransform(&xFormOld);
 
-	//Translate(pDC, 0.5 * width, 0.85 * height, false);
-	//Rotate(pDC, rotationAngle1, false); // Rotacija SVE
-	//Translate(pDC, -0.5 * width, -0.775 * height, false);
-	//Translate(pDC, 0.5 * width, 0.775 * height, false);
-	//pDC->PlayMetaFile(Meta, CRect(-0.065 * width, -0.075 * height, 0.065 * width, 0.075 * height));
+	//Translate(pDC, -0.5 * width, -0.5 * height, true);
+	//Rotate(pDC, 90, true); // Rotacija SVE
+	//Translate(pDC, 0.5 * width, 0.5 * height, true);
+
 	Translate(pDC, -0.5 * width, -0.85 * height, true);
 	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
 	Translate(pDC, 0.5 * width, 0.85 * height, true);
