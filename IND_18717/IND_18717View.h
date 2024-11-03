@@ -24,6 +24,10 @@ public:
 	bool showGrid = false; // Da li je mreža uključena
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 
+	void RotateObject();
+	int rotationAngle;
+	int rotationAngle1;
+
 	void Translate(CDC* pDC, float dX, float dY, bool rightMultiply);
 	void Scale(CDC* pDC, float sX, float sY, bool rightMultiply);
 	void Rotate(CDC* pDC, float angle, bool rightMultiply);
