@@ -94,14 +94,10 @@ void CIND18717View::OnDraw(CDC* pDC)
 	XFORM xFormOld;
 	bool b = pDC->GetWorldTransform(&xFormOld);
 
-	//Translate(pDC, -0.5 * width, -0.5 * height, true);
-	//Rotate(pDC, 90, true); // Rotacija SVE
-	//Translate(pDC, 0.5 * width, 0.5 * height, true);
-
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
-	pDC->PlayMetaFile(Meta, CRect(0.435 * width, 0.7 * height, 0.565 * width, 0.85 * height));
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
+	pDC->PlayMetaFile(Meta2, CRect(0.435 * width, 0.7 * height, 0.565 * width, 0.85 * height));
 
 	b = pDC->SetWorldTransform(&xFormOld);
 
@@ -109,9 +105,10 @@ void CIND18717View::OnDraw(CDC* pDC)
 	Rotate(pDC, 45, true);
 	Translate(pDC, 0.55 * width, 0.65 * height, true);
 	//////////
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
+
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
 	pDC->PlayMetaFile(Meta2, CRect(0.525 * width, 0.57 * height, 0.575 * width, 0.73 * height));
 
 	b = pDC->SetWorldTransform(&xFormOld);
@@ -120,9 +117,10 @@ void CIND18717View::OnDraw(CDC* pDC)
 	Rotate(pDC, -45, true);
 	Translate(pDC, 0.45 * width, 0.65 * height, true);
 	/////////////
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
+
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
 	pDC->PlayMetaFile(Meta2, CRect(0.425 * width, 0.57 * height, 0.475 * width, 0.73 * height));
 
 	b = pDC->SetWorldTransform(&xFormOld);
@@ -131,124 +129,164 @@ void CIND18717View::OnDraw(CDC* pDC)
 	Rotate(pDC, 90, true);
 	Translate(pDC, 0.32 * width, 0.595 * height, true);
 	////////////
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
+
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
 	pDC->PlayMetaFile(Meta2, CRect(0.285 * width, 0.525 * height, 0.365 * width, 0.675 * height));
 
 	b = pDC->SetWorldTransform(&xFormOld);
 
-	Translate(pDC, -0.325 * width, -0.6 * height, true); // cratnje
-	Rotate(pDC, 90, true);
-	Translate(pDC, 0.68 * width, 0.595 * height, true);
-	////////////
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.285 * width, 0.525 * height, 0.365 * width, 0.675 * height));
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.55 * width, -0.65 * height, true); // crtanje
+	Translate(pDC, -0.325 * width, -0.475 * height, true); // cratnje
 	Rotate(pDC, 45, true);
-	Translate(pDC, 0.798 * width, 0.551 * height, true);
-	//////////////
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.51 * width, 0.56 * height, 0.59 * width, 0.71 * height));
+	Translate(pDC, 0.655 * width, 0.54 * height, true);
+	////////////
+
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
+	pDC->PlayMetaFile(Meta2, CRect(0.285 * width, 0.4 * height, 0.365 * width, 0.55 * height));
+
+	b = pDC->SetWorldTransform(&xFormOld);
+
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
+	pDC->PlayMetaFile(Meta2, CRect(0.67 * width, 0.34 * height, 0.75 * width, 0.49 * height));
 
 	b = pDC->SetWorldTransform(&xFormOld);
 
 	Translate(pDC, -0.55 * width, -0.65 * height, true); // crtanje
-	Rotate(pDC, -45, true);
-	Translate(pDC, 0.82 * width, 0.66 * height, true);
+	Rotate(pDC, 90, true);
+	Translate(pDC, 0.772 * width, 0.49 * height, true);
 	//////////////
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
+
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
 	pDC->PlayMetaFile(Meta2, CRect(0.51 * width, 0.56 * height, 0.59 * width, 0.71 * height));
 
 	b = pDC->SetWorldTransform(&xFormOld);
 
-	Translate(pDC, -0.605 * width, -0.595 * height, true);
-	Rotate(pDC, rotationAngle, true); // Rotacija sa dinamičkim uglom
-	Translate(pDC, 0.605 * width, 0.595 * height, true);
-	///////////////
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
-	pDC->PlayMetaFile(Meta, CRect(0.565 * width, 0.445 * height, 0.645 * width, 0.595 * height));
+	Translate(pDC, -0.5 * width, -0.70 * height, true);
+	Rotate(pDC, rotationAngle1, true); // Rotacija SREDINA
+	Translate(pDC, 0.5 * width, 0.70 * height, true);
+
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
+	pDC->PlayMetaFile(Meta, CRect(0.475 * width, 0.55 * height, 0.525 * width, 0.7 * height));
 
 	b = pDC->SetWorldTransform(&xFormOld);
 
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.475 * width, 0.55 * height, 0.525 * width, 0.7 * height));
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
 	pDC->PlayMetaFile(Meta2, CRect(0.355 * width, 0.445 * height, 0.435 * width, 0.595 * height));
 
 	b = pDC->SetWorldTransform(&xFormOld);
 
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.335 * width, 0.295 * height, 0.455 * width, 0.445 * height));
+	Translate(pDC, -0.5 * width, -0.70 * height, true);
+	Rotate(pDC, rotationAngle1, true); // Rotacija SREDINA
+	Translate(pDC, 0.5 * width, 0.70 * height, true);
 
+	Translate(pDC, -0.675 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.675 * width, 0.5 * height, true);
+
+	Translate(pDC, -0.625 * width, -0.40 * height, true);
+	Rotate(pDC, rotationAngle, true); // Rotacija SAM
+	Translate(pDC, 0.625 * width, 0.40 * height, true);
+
+	Translate(pDC, -0.625 * width, -0.48 * height, true);
+	Scale(pDC, 0.8, 2.5, true);
+	Translate(pDC, 0.625 * width, 0.48 * height, true);
+	pDC->PlayMetaFile(Meta, CRect(0.64 * width, 0.38 * height, 0.71 * width, 0.58 * height)); // sredina
+
+	b = pDC->SetWorldTransform(&xFormOld);
+
+	Translate(pDC, -0.5 * width, -0.70 * height, true);
+	Rotate(pDC, rotationAngle1, true); // Rotacija SREDINA
+	Translate(pDC, 0.5 * width, 0.70 * height, true);
+
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
+	pDC->PlayMetaFile(Meta2, CRect(0.435 * width, 0.4 * height, 0.565 * width, 0.55 * height));
+
+	b = pDC->SetWorldTransform(&xFormOld);
 
 	// krugovi
 	pDC->SelectObject(&green);
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
 	pDC->Ellipse(0.48 * width, 0.83 * height, 0.52 * width, 0.87 * height);
 
 	b = pDC->SetWorldTransform(&xFormOld);
 
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
+	Translate(pDC, -0.5 * width, -0.70 * height, true);
+	Rotate(pDC, rotationAngle1, true); // Rotacija SREDINA
+	Translate(pDC, 0.5 * width, 0.70 * height, true);
+
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
+	pDC->Ellipse(0.48 * width, 0.38 * height, 0.52 * width, 0.42 * height);
+
+	b = pDC->SetWorldTransform(&xFormOld);
+
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
 	pDC->Ellipse(0.48 * width, 0.68 * height, 0.52 * width, 0.72 * height);
 
 	b = pDC->SetWorldTransform(&xFormOld);
 
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
 	pDC->Ellipse(0.375 * width, 0.575 * height, 0.415 * width, 0.615 * height);
 
 	b = pDC->SetWorldTransform(&xFormOld);
 
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
 	pDC->Ellipse(0.585 * width, 0.575 * height, 0.625 * width, 0.615 * height);
 
 	b = pDC->SetWorldTransform(&xFormOld);
 
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
-	pDC->Ellipse(0.375 * width, 0.425 * height, 0.415 * width, 0.465 * height);
+	Translate(pDC, -0.5 * width, -0.70 * height, true);
+	Rotate(pDC, rotationAngle1, true); // Rotacija SREDINA
+	Translate(pDC, 0.5 * width, 0.70 * height, true);
+
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
+	pDC->Ellipse(0.48 * width, 0.53 * height, 0.52 * width, 0.57 * height); // sredina
 
 	b = pDC->SetWorldTransform(&xFormOld);
 
-	Translate(pDC, -0.5 * width, -0.85 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SVE
-	Translate(pDC, 0.5 * width, 0.85 * height, true);
 	//Scale(pDC, 1.3, 1.3, true);
-	pDC->Ellipse(0.735 * width, 0.575 * height, 0.775 * width, 0.615 * height);
+
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
+	pDC->Ellipse(0.69 * width, 0.47 * height, 0.73 * width, 0.51 * height);
 
 	b = pDC->SetWorldTransform(&xFormOld);
-	pDC->SetGraphicsMode(prevMode);
 
 	pDC->SelectObject(&brown);
+	Translate(pDC, -0.5 * width, -0.5 * height, true);
+	Rotate(pDC, 90, true); // za 90
+	Translate(pDC, 0.5 * width, 0.5 * height, true);
 	pDC->Rectangle(0.38 * width, 0.855 * height, 0.62 * width, 0.9 * height);
 	CPoint cup[4] = { CPoint(0.4 * width, 0.9 * height), CPoint(0.6 * width, 0.9 * height), CPoint(0.58 * width, height), CPoint(0.42 * width, height) };
 	pDC->Polygon(cup, 4);
+
+	b = pDC->SetWorldTransform(&xFormOld);
+	pDC->SetGraphicsMode(prevMode);
 
 
 
