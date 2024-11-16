@@ -183,6 +183,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\DImage\DImage.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="IND_18717.h" />
     <ClInclude Include="IND_18717Doc.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\DImage\DImage.cpp" />
     <ClCompile Include="IND_18717.cpp" />
     <ClCompile Include="IND_18717Doc.cpp" />
     <ClCompile Include="IND_18717View.cpp" />

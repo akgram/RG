@@ -16,6 +16,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include "../DImage/DImage.h"
 
 
 // CIND18717View
@@ -37,8 +38,7 @@ CIND18717View::CIND18717View() noexcept
 {
 	// TODO: add construction code here
 	// Inicijalizacija u CIND18717View konstruktoru
-	rotationAngle = 0;
-	rotationAngle1 = 0;
+	bmpImage.Load(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\download.bmp");
 
 
 }
@@ -58,238 +58,116 @@ BOOL CIND18717View::PreCreateWindow(CREATESTRUCT& cs)
 // CIND18717View drawing
 
 
+void CIND18717View::Photo(CDC* pDC)
+{
+	CRect rect;
+	GetClientRect(&rect);
+
+	//if (this->stanje == 1)
+	//	Grid(pDC, rect);
+
+	transDeo(pDC, -centerX + 145, centerY - 145, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d1.bmp"), -155);
+	transDeo(pDC, -centerX + 9, centerY - 2, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d2.bmp"), 58);
+	transDeo(pDC, -centerX - 140, centerY, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d3.bmp"), 72);
+	transDeo(pDC, -centerX + 155, centerY + 142, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d4.bmp"), 19);
+	transDeo(pDC, -centerX - 156, centerY - 155, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d5.bmp"), -76);
+	transDeo(pDC, -centerX + 5, centerY + 155, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d6.bmp"), 113); // PLAVA
+	transDeo(pDC, -centerX - 7, centerY - 149, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d7.bmp"), -125);
+	transDeo(pDC, -centerX - 149, centerY + 158, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d8.bmp"), 161);
+	transDeo(pDC, -centerX + 157, centerY + 5, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d9.bmp"), 107);
+}
+
 
 void CIND18717View::OnDraw(CDC* pDC)
 {
-	CIND18717Doc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
+	CRect rect;
+	GetClientRect(&rect);
 
-	int width = 500;
-	int height = 500;
+	CDC* MemDC = new CDC();
+	MemDC->CreateCompatibleDC(pDC);
+	CBitmap bmp;
+	bmp.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
+	MemDC->SelectObject(&bmp);
+	CBrush brush(RGB(255, 255, 255));
+	CBrush* pOldBrush = MemDC->SelectObject(&brush);
+	MemDC->Rectangle(0, 0, rect.Width(), rect.Height());
 
-	CPen pen(PS_SOLID, 1, RGB(0, 0, 0));  // black boja za konture
-	CBrush bgBrush(RGB(0, 255, 255));       // cyan background
-	CBrush green(RGB(0, 200, 0));       // green
-	CBrush brown(RGB(210, 105, 30));       // brown
+	Grid(MemDC, width, height, showGrid);
 
-	pDC->FillRect(CRect(0, 0, width, height), &bgBrush); // pozadina
+	int oldMode = pDC->SetGraphicsMode(GM_ADVANCED);
+	MemDC->SetGraphicsMode(GM_ADVANCED);
 
-	CPen* pOldPen = pDC->SelectObject(&pen);
+	XFORM old;
+	MemDC->GetWorldTransform(&old);
+	//this->AntiFlicker(*MemDC);
+	this->Photo(MemDC);
+	MemDC->SetWorldTransform(&old);
+	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), MemDC, 0, 0, SRCCOPY);
+	MemDC->DeleteDC();
+	delete MemDC;
+}
 
+CPoint CIND18717View::drawDeo(int x, int y, CString nameOfFile, CDC* pDC) {
+	DImage* slika = new DImage();
+	slika->Load(nameOfFile);
 
-	CString EMFname = CString("C:\\Users\\krstic\\Desktop\\RG\\cactus_part_light.emf");
-	HENHMETAFILE Meta = GetEnhMetaFile(EMFname);
+	CBitmap* bmpSlika = slika->m_pBmp;
+	CBitmap bmpMask;
+	BITMAP bm;
 
-	CString EMFname2 = CString("C:\\Users\\krstic\\Desktop\\RG\\cactus_part.emf");
-	HENHMETAFILE Meta2 = GetEnhMetaFile(EMFname2);
+	bmpSlika->GetBitmap(&bm);
+	bmpMask.CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL);
 
-	if (Meta == NULL && Meta2 == NULL) {
-		AfxMessageBox(_T("Nije moguće učitati EMF fajl."));
-		return;
+	CDC* SrcDC = new CDC();
+	SrcDC->CreateCompatibleDC(pDC);
+	CDC* DstDC = new CDC();
+	DstDC->CreateCompatibleDC(pDC);
+
+	CBitmap* pOldSrcBmp = SrcDC->SelectObject(bmpSlika);
+	CBitmap* pOldDstBmp = DstDC->SelectObject(&bmpMask);
+
+	COLORREF clrTopLeft = SrcDC->GetPixel(0, 0);
+	COLORREF clrSaveBk = SrcDC->SetBkColor(clrTopLeft);
+	DstDC->BitBlt(x, y, bm.bmWidth, bm.bmHeight, SrcDC, 0, 0, SRCCOPY); // copy sve iz scrDC u dstDC
+
+	// Ako je ime fajla d6.bmp, primeni plavi filter
+	if (nameOfFile.Find(L"d6.bmp") != -1) {
+		BITMAP bmBlue;
+		bmpSlika->GetBitmap(&bmBlue);
+		Blue(bmpSlika, bmBlue);
 	}
+	Gray(bmpSlika, bm);
 
-	int prevMode = pDC->SetGraphicsMode(GM_ADVANCED);
-	XFORM xFormOld;
-	bool b = pDC->GetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.435 * width, 0.7 * height, 0.565 * width, 0.85 * height));
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.55 * width, -0.65 * height, true); // crtanje
-	Rotate(pDC, 45, true);
-	Translate(pDC, 0.55 * width, 0.65 * height, true);
-	//////////
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.525 * width, 0.57 * height, 0.575 * width, 0.73 * height));
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.45 * width, -0.65 * height, true); // crtanje
-	Rotate(pDC, -45, true);
-	Translate(pDC, 0.45 * width, 0.65 * height, true);
-	/////////////
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.425 * width, 0.57 * height, 0.475 * width, 0.73 * height));
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.325 * width, -0.6 * height, true); // crtanje
-	Rotate(pDC, 90, true);
-	Translate(pDC, 0.32 * width, 0.595 * height, true);
-	////////////
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.285 * width, 0.525 * height, 0.365 * width, 0.675 * height));
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.325 * width, -0.475 * height, true); // cratnje
-	Rotate(pDC, 45, true);
-	Translate(pDC, 0.655 * width, 0.54 * height, true);
-	////////////
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.285 * width, 0.4 * height, 0.365 * width, 0.55 * height));
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.67 * width, 0.34 * height, 0.75 * width, 0.49 * height));
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.55 * width, -0.65 * height, true); // crtanje
-	Rotate(pDC, 90, true);
-	Translate(pDC, 0.772 * width, 0.49 * height, true);
-	//////////////
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.51 * width, 0.56 * height, 0.59 * width, 0.71 * height));
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.5 * width, -0.70 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SREDINA
-	Translate(pDC, 0.5 * width, 0.70 * height, true);
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->PlayMetaFile(Meta, CRect(0.475 * width, 0.55 * height, 0.525 * width, 0.7 * height));
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.355 * width, 0.445 * height, 0.435 * width, 0.595 * height));
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.5 * width, -0.70 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SREDINA
-	Translate(pDC, 0.5 * width, 0.70 * height, true);
-
-	Translate(pDC, -0.675 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.675 * width, 0.5 * height, true);
-
-	Translate(pDC, -0.625 * width, -0.40 * height, true);
-	Rotate(pDC, rotationAngle, true); // Rotacija SAM
-	Translate(pDC, 0.625 * width, 0.40 * height, true);
-
-	Translate(pDC, -0.625 * width, -0.48 * height, true);
-	Scale(pDC, 0.8, 2.5, true);
-	Translate(pDC, 0.625 * width, 0.48 * height, true);
-	pDC->PlayMetaFile(Meta, CRect(0.64 * width, 0.38 * height, 0.71 * width, 0.58 * height)); // sredina
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.5 * width, -0.70 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SREDINA
-	Translate(pDC, 0.5 * width, 0.70 * height, true);
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->PlayMetaFile(Meta2, CRect(0.435 * width, 0.4 * height, 0.565 * width, 0.55 * height));
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	// krugovi
-	pDC->SelectObject(&green);
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->Ellipse(0.48 * width, 0.83 * height, 0.52 * width, 0.87 * height);
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.5 * width, -0.70 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SREDINA
-	Translate(pDC, 0.5 * width, 0.70 * height, true);
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->Ellipse(0.48 * width, 0.38 * height, 0.52 * width, 0.42 * height);
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->Ellipse(0.48 * width, 0.68 * height, 0.52 * width, 0.72 * height);
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->Ellipse(0.375 * width, 0.575 * height, 0.415 * width, 0.615 * height);
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->Ellipse(0.585 * width, 0.575 * height, 0.625 * width, 0.615 * height);
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	Translate(pDC, -0.5 * width, -0.70 * height, true);
-	Rotate(pDC, rotationAngle1, true); // Rotacija SREDINA
-	Translate(pDC, 0.5 * width, 0.70 * height, true);
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->Ellipse(0.48 * width, 0.53 * height, 0.52 * width, 0.57 * height); // sredina
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	//Scale(pDC, 1.3, 1.3, true);
-
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->Ellipse(0.69 * width, 0.47 * height, 0.73 * width, 0.51 * height);
-
-	b = pDC->SetWorldTransform(&xFormOld);
-
-	pDC->SelectObject(&brown);
-	Translate(pDC, -0.5 * width, -0.5 * height, true);
-	Rotate(pDC, 90, true); // za 90
-	Translate(pDC, 0.5 * width, 0.5 * height, true);
-	pDC->Rectangle(0.38 * width, 0.855 * height, 0.62 * width, 0.9 * height);
-	CPoint cup[4] = { CPoint(0.4 * width, 0.9 * height), CPoint(0.6 * width, 0.9 * height), CPoint(0.58 * width, height), CPoint(0.42 * width, height) };
-	pDC->Polygon(cup, 4);
-
-	b = pDC->SetWorldTransform(&xFormOld);
-	pDC->SetGraphicsMode(prevMode);
+	COLORREF clrSaveDstText = SrcDC->SetTextColor(RGB(255, 255, 255));
+	SrcDC->SetBkColor(RGB(0, 0, 0));
+	SrcDC->BitBlt(0, 0, bm.bmWidth, bm.bmHeight, DstDC, 0, 0, SRCAND); // vraca iz dstDC u srcDC ali sa AND i pravi transparent
 
 
+	pDC->BitBlt(-bm.bmWidth / 2, -bm.bmHeight / 2, bm.bmWidth, bm.bmHeight, DstDC, 0, 0, SRCAND);
+	pDC->BitBlt(-bm.bmWidth / 2, -bm.bmHeight / 2, bm.bmWidth, bm.bmHeight, SrcDC, 0, 0, SRCPAINT);
 
+	SrcDC->DeleteDC();
+	delete SrcDC;
+	DstDC->DeleteDC();
+	delete DstDC;
+
+	return{ bm.bmWidth, bm.bmHeight };
+}
+
+void CIND18717View::transDeo(CDC* pDC, int x, int y, CString fileName, double alpha) {
+	this->Mirror(pDC, true, false, true);
+	this->Scale(pDC, 0, 0, true);
+	this->Translate(pDC, x, y, false);
+	this->Rotate(pDC, alpha, false);
+	CString nameOfFile1(fileName);
+	CPoint imageWidthHeight1 = drawDeo(0, 0, nameOfFile1, pDC);
+
+	XFORM Xform;
+	ModifyWorldTransform(pDC->m_hDC, &Xform, MWT_IDENTITY);
+}
+
+void CIND18717View::Grid(CDC* pDC, int width, int height, bool showGrid)
+{
 	// Crtanje mreže (grid)
 	CPen grids(TRANSPARENT, 2, RGB(240, 240, 240));
 	pDC->SelectObject(&grids);
@@ -309,34 +187,79 @@ void CIND18717View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	{
 		showGrid = !showGrid;
 		Invalidate();         // refresh
-	}
 
-	else if (nChar == 'R') // Na "r" rotiraj za 10 stepeni JEDAN
-	{
-		rotationAngle += 10; // Povećaj ugao rotacije za 10 stepeni
-		Invalidate(); // refresh
-	}
+		//CPaintDC dc(this);
+		//UpdateWindow();      // Prisiljava osvežavanje
 
-	else if (nChar == 'M') // Na "R" rotiraj za 10 stepeni SVE
-	{
-		rotationAngle1 += 10; // Povećaj ugao rotacije za 10 stepeni
-		Invalidate(); // refresh
-	}
-
-	else if (nChar == 'L') // Na "l" rotiraj za -10 stepeni JEDAN
-	{
-		rotationAngle -= 10;
-		Invalidate();
-	}
-
-	else if (nChar == 'N') // Na "L" rotiraj za 10 stepeni SVE
-	{
-		rotationAngle1 -= 10;
-		Invalidate();
+		//AntiFlicker(dc);
 	}
 
 	// Pozovi osnovnu klasu da obradi ostale tastere
 	CView::OnKeyDown(nChar, nRepCnt, nFlags);
+}
+
+void CIND18717View::Gray(CBitmap* bmpImage, BITMAP bm)
+{
+
+	long dwCount = bm.bmWidthBytes * bm.bmHeight;
+	BYTE* lpBits = new BYTE[dwCount];
+	ZeroMemory(lpBits, dwCount);
+	bmpImage->GetBitmapBits(bm.bmWidthBytes * bm.bmHeight, lpBits);
+
+	for (long i = 0; i < dwCount - 3; i += 3)
+	{
+		BYTE b = BYTE(lpBits[i]);
+		BYTE g = BYTE(lpBits[i + 1]);
+		BYTE r = BYTE(lpBits[i + 2]);
+		BYTE gray = 64 + (b + g + r) / 3; if (gray > 255) gray = 255; // 0.299 * r + 0.587 * g + 0.114 * b;
+		lpBits[i] = gray;
+		lpBits[i + 1] = gray;
+		lpBits[i + 2] = gray;
+	}
+
+	bmpImage->SetBitmapBits(dwCount, lpBits);
+	delete[] lpBits;
+}
+
+void CIND18717View::Blue(CBitmap* bmpImage, BITMAP bm)
+{
+
+	long dwCount = bm.bmWidthBytes * bm.bmHeight;
+	BYTE* lpBits = new BYTE[dwCount];
+	ZeroMemory(lpBits, dwCount);
+	bmpImage->GetBitmapBits(bm.bmWidthBytes * bm.bmHeight, lpBits); // kopira sve piksele iz bmpImage u lpBits
+
+	for (long i = 0; i < dwCount - 3; i += 3)
+	{
+		lpBits[i] = 0;      // B na 0
+		lpBits[i + 1] = 0;  // G na 0
+		lpBits[i + 2] = lpBits[i + 2];  // Ostavlja plavi kanal
+	}
+
+	bmpImage->SetBitmapBits(dwCount, lpBits);
+	delete[] lpBits;
+}
+
+void CIND18717View::AntiFlicker(CDC& dc)
+{
+	// Kreiranje memorijskog DC-ja
+	CDC memDC;
+	memDC.CreateCompatibleDC(&dc); // Kompatibilan sa glavnim DC-jem
+
+	// Kreiranje kompatibilne bitmape
+	CBitmap memBitmap;
+	memBitmap.CreateCompatibleBitmap(&dc, 500, 500); // Dimenzije bitmape
+	CBitmap* pOldBitmap = memDC.SelectObject(&memBitmap); // Selektovanje bitmape u memorijski DC
+
+	// Iscrtavanje na memorijskom DC-ju
+	memDC.FillSolidRect(0, 0, 500, 500, RGB(255, 255, 255)); // Pozadina bele boje
+	memDC.TextOut(100, 100, _T("Testiranje Anti-Flicker metode")); // Tekst
+
+	// Kopiranje sadržaja memorijskog DC-ja u glavni DC prozora
+	dc.BitBlt(0, 0, 500, 500, &memDC, 0, 0, SRCCOPY);
+
+	// Vraćanje stare bitmape u memorijski DC
+	memDC.SelectObject(pOldBitmap);
 }
 
 void CIND18717View::Translate(CDC* pDC, float dX, float dY, bool rightMultiply)
@@ -399,6 +322,18 @@ void CIND18717View::Rotate(CDC* pDC, float angle, bool rightMultiply)
 		pDC->ModifyWorldTransform(&xForm, MWT_LEFTMULTIPLY);
 	}
 }
+
+void CIND18717View::Mirror(CDC* pDC, bool mx, bool my, bool rightMultiply) {
+	XFORM transform;
+	transform.eM11 = mx ? -1.0f : 1.0f;
+	transform.eM12 = 0.0f;
+	transform.eM21 = 0.0f;
+	transform.eM22 = my ? -1.0f : 1.0f;
+	transform.eDx = 0.0f;
+	transform.eDy = 0.0f;
+	pDC->ModifyWorldTransform(&transform, rightMultiply ? MWT_RIGHTMULTIPLY : MWT_LEFTMULTIPLY);
+}
+
 
 
 
