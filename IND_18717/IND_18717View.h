@@ -42,9 +42,9 @@ public:
 
 	void Gray(CBitmap* bmpImage, BITMAP bm);
 
-	void Blue(CBitmap* bmpImage, BITMAP bm);
+	void Red(CBitmap* bmpImage, BITMAP bm);
 
-	void AntiFlicker(CDC& dc);
+	void AntiFlicker(CDC* dc);
 
 	void Translate(CDC* pDC, float dX, float dY, bool rightMultiply);
 	void Scale(CDC* pDC, float sX, float sY, bool rightMultiply);

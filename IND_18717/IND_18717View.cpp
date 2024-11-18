@@ -38,7 +38,7 @@ CIND18717View::CIND18717View() noexcept
 {
 	// TODO: add construction code here
 	// Inicijalizacija u CIND18717View konstruktoru
-	bmpImage.Load(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\download.bmp");
+	//bmpImage.Load(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\download.bmp");
 
 
 }
@@ -63,18 +63,15 @@ void CIND18717View::Photo(CDC* pDC)
 	CRect rect;
 	GetClientRect(&rect);
 
-	//if (this->stanje == 1)
-	//	Grid(pDC, rect);
-
-	transDeo(pDC, -centerX + 145, centerY - 145, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d1.bmp"), -155);
-	transDeo(pDC, -centerX + 9, centerY - 2, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d2.bmp"), 58);
-	transDeo(pDC, -centerX - 140, centerY, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d3.bmp"), 72);
-	transDeo(pDC, -centerX + 155, centerY + 142, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d4.bmp"), 19);
-	transDeo(pDC, -centerX - 156, centerY - 155, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d5.bmp"), -76);
-	transDeo(pDC, -centerX + 5, centerY + 155, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d6.bmp"), 113); // PLAVA
-	transDeo(pDC, -centerX - 7, centerY - 149, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d7.bmp"), -125);
-	transDeo(pDC, -centerX - 149, centerY + 158, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d8.bmp"), 161);
-	transDeo(pDC, -centerX + 157, centerY + 5, CString(L"C:\\Users\\krstic\\Desktop\\RG\\bitmap_lab3\\d9.bmp"), 107);
+	transDeo(pDC, -centerX, centerY - 143, CString(L"C:\\Users\\krstic\\Desktop\\RG\\dib_zad\\img1.dib"), 166);
+	transDeo(pDC, -centerX + 6, centerY - 7.5, CString(L"C:\\Users\\krstic\\Desktop\\RG\\dib_zad\\img2.dib"), 14);
+	transDeo(pDC, -centerX + 150, centerY + 157, CString(L"C:\\Users\\krstic\\Desktop\\RG\\dib_zad\\img3.dib"), 156);
+	transDeo(pDC, -centerX - 141, centerY + 149, CString(L"C:\\Users\\krstic\\Desktop\\RG\\dib_zad\\img4.dib"), 60);
+	transDeo(pDC, -centerX - 150, centerY + 8, CString(L"C:\\Users\\krstic\\Desktop\\RG\\dib_zad\\img5.dib"), 169.5);
+	transDeo(pDC, -centerX + 158, centerY - 148, CString(L"C:\\Users\\krstic\\Desktop\\RG\\dib_zad\\img6.dib"), 87);
+	transDeo(pDC, -centerX - 7, centerY + 149, CString(L"C:\\Users\\krstic\\Desktop\\RG\\dib_zad\\img7.dib"), -102.5); // CRVENA
+	transDeo(pDC, -centerX - 156, centerY - 148, CString(L"C:\\Users\\krstic\\Desktop\\RG\\dib_zad\\img8.dib"), -135);
+	transDeo(pDC, -centerX + 158, centerY + 2, CString(L"C:\\Users\\krstic\\Desktop\\RG\\dib_zad\\img9.dib"), 82);
 }
 
 
@@ -99,8 +96,8 @@ void CIND18717View::OnDraw(CDC* pDC)
 
 	XFORM old;
 	MemDC->GetWorldTransform(&old);
-	//this->AntiFlicker(*MemDC);
-	this->Photo(MemDC);
+	//AntiFlicker(pDC);
+	Photo(MemDC);
 	MemDC->SetWorldTransform(&old);
 	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), MemDC, 0, 0, SRCCOPY);
 	MemDC->DeleteDC();
@@ -131,10 +128,10 @@ CPoint CIND18717View::drawDeo(int x, int y, CString nameOfFile, CDC* pDC) {
 	DstDC->BitBlt(x, y, bm.bmWidth, bm.bmHeight, SrcDC, 0, 0, SRCCOPY); // copy sve iz scrDC u dstDC
 
 	// Ako je ime fajla d6.bmp, primeni plavi filter
-	if (nameOfFile.Find(L"d6.bmp") != -1) {
+	if (nameOfFile.Find(L"img7.dib") != -1) {
 		BITMAP bmBlue;
 		bmpSlika->GetBitmap(&bmBlue);
-		Blue(bmpSlika, bmBlue);
+		Red(bmpSlika, bmBlue);
 	}
 	Gray(bmpSlika, bm);
 
@@ -188,10 +185,10 @@ void CIND18717View::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		showGrid = !showGrid;
 		Invalidate();         // refresh
 
-		//CPaintDC dc(this);
-		//UpdateWindow();      // Prisiljava osvežavanje
+		CRect rect;
+		GetClientRect(&rect);
+		InvalidateRect(&rect);
 
-		//AntiFlicker(dc);
 	}
 
 	// Pozovi osnovnu klasu da obradi ostale tastere
@@ -221,7 +218,7 @@ void CIND18717View::Gray(CBitmap* bmpImage, BITMAP bm)
 	delete[] lpBits;
 }
 
-void CIND18717View::Blue(CBitmap* bmpImage, BITMAP bm)
+void CIND18717View::Red(CBitmap* bmpImage, BITMAP bm)
 {
 
 	long dwCount = bm.bmWidthBytes * bm.bmHeight;
@@ -231,34 +228,27 @@ void CIND18717View::Blue(CBitmap* bmpImage, BITMAP bm)
 
 	for (long i = 0; i < dwCount - 3; i += 3)
 	{
-		lpBits[i] = 0;      // B na 0
+		lpBits[i] = lpBits[i];      // R ostavlja
 		lpBits[i + 1] = 0;  // G na 0
-		lpBits[i + 2] = lpBits[i + 2];  // Ostavlja plavi kanal
+		lpBits[i + 2] = 0;  // B na 0
 	}
 
 	bmpImage->SetBitmapBits(dwCount, lpBits);
 	delete[] lpBits;
 }
 
-void CIND18717View::AntiFlicker(CDC& dc)
+void CIND18717View::AntiFlicker(CDC* dc)
 {
-	// Kreiranje memorijskog DC-ja
 	CDC memDC;
-	memDC.CreateCompatibleDC(&dc); // Kompatibilan sa glavnim DC-jem
+	memDC.CreateCompatibleDC(dc);
 
-	// Kreiranje kompatibilne bitmape
 	CBitmap memBitmap;
-	memBitmap.CreateCompatibleBitmap(&dc, 500, 500); // Dimenzije bitmape
-	CBitmap* pOldBitmap = memDC.SelectObject(&memBitmap); // Selektovanje bitmape u memorijski DC
+	memBitmap.CreateCompatibleBitmap(dc, 500, 500);
+	CBitmap* pOldBitmap = memDC.SelectObject(&memBitmap);
 
-	// Iscrtavanje na memorijskom DC-ju
-	memDC.FillSolidRect(0, 0, 500, 500, RGB(255, 255, 255)); // Pozadina bele boje
-	memDC.TextOut(100, 100, _T("Testiranje Anti-Flicker metode")); // Tekst
+	Photo(&memDC);
 
-	// Kopiranje sadržaja memorijskog DC-ja u glavni DC prozora
-	dc.BitBlt(0, 0, 500, 500, &memDC, 0, 0, SRCCOPY);
-
-	// Vraćanje stare bitmape u memorijski DC
+	dc->BitBlt(0, 0, 500, 500, &memDC, 0, 0, SRCCOPY);
 	memDC.SelectObject(pOldBitmap);
 }
 
