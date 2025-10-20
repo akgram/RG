@@ -1,0 +1,229 @@
+void CGLRenderer::DrawEnvCube(double a)
+{
+	glColor3f(1, 1, 1);
+	glEnable(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, bot);
+	glBegin(GL_QUADS);
+		glNormal3f(0, -1, 0);
+
+		glTexCoord2f(0, 0);
+		glVertex3f(-a / 2, 0, -a / 2);
+
+		glTexCoord2f(1, 0);
+		glVertex3f(a / 2, 0, -a / 2);
+
+		glTexCoord2f(1, 1);
+		glVertex3f(a / 2, 0, a / 2);
+
+		glTexCoord2f(0, 1);
+		glVertex3f(-a / 2, 0, a / 2);
+	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, side);
+	glBegin(GL_QUADS);
+		glNormal3f(0, 0, 1);
+		
+		glTexCoord2f(0, 0);
+		glVertex3f(-a / 2, a, -a / 2);
+
+		glTexCoord2f(0, 1);
+		glVertex3f(-a / 2, 0, -a / 2);
+
+		glTexCoord2f(1, 1);
+		glVertex3f(a / 2, 0, -a / 2);
+
+		glTexCoord2f(1, 0);
+		glVertex3f(a / 2, a, -a / 2);
+	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, left);
+	glBegin(GL_QUADS);
+		glNormal3f(1, 0, 0);
+
+		glTexCoord2f(0, 0);
+		glVertex3f(-a / 2, a, a / 2);
+
+		glTexCoord2f(0, 1);
+		glVertex3f(-a / 2, 0, a / 2);
+
+		glTexCoord2f(1, 1);
+		glVertex3f(-a / 2, 0, -a / 2);
+
+		glTexCoord2f(1, 0);
+		glVertex3f(-a / 2, a, -a / 2);
+	glEnd();
+
+	/*glBindTexture(GL_TEXTURE_2D, right);
+	glBegin(GL_QUADS);
+		glNormal3f(-1, 0, 0);
+
+		glTexCoord2f(0, 0);
+		glVertex3f(a / 2, a, -a / 2);
+
+		glTexCoord2f(0, 1);
+		glVertex3f(a / 2, 0, -a / 2);
+
+		glTexCoord2f(1, 1);
+		glVertex3f(a / 2, 0, a / 2);
+
+		glTexCoord2f(1, 0);
+		glVertex3f(a / 2, a, a / 2);
+	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, back);
+	glBegin(GL_QUADS);
+		glNormal3f(0, 0, -1);
+
+		glTexCoord2f(0, 0);
+		glVertex3f(a / 2, a, a / 2);
+
+		glTexCoord2f(0, 1);
+		glVertex3f(a / 2, 0, a / 2);
+
+		glTexCoord2f(1, 1);
+		glVertex3f(-a / 2, 0, a / 2);
+
+		glTexCoord2f(1, 0);
+		glVertex3f(-a / 2, a, a / 2);
+	glEnd();*/
+
+	glBindTexture(GL_TEXTURE_2D, top);
+		glBegin(GL_QUADS);
+		glNormal3f(0, -1, 0);
+
+		glTexCoord2f(0, 0);
+		glVertex3f(-a / 2, a, -a / 2);
+
+		glTexCoord2f(0, 1);
+		glVertex3f(-a / 2, a, a / 2);
+
+		glTexCoord2f(1, 1);
+		glVertex3f(a / 2, a, a / 2);
+
+		glTexCoord2f(1, 0);
+		glVertex3f(a / 2, a, -a / 2);
+	glEnd();
+}
+-----------------------------------------------------------------------------------
+
+void CGLRenderer::DrawCylinder(double r1, double r2, double h, int nSeg, int texMode, bool bIsOpen)
+{
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, lamp);
+
+	double alfa = 2 * 3.14 / nSeg;
+
+	if (!bIsOpen)
+	{
+		glBegin(GL_TRIANGLE_FAN);
+			//glNormal3f(0, 1, 0);
+			glTexCoord2f(0.5, 0.25);
+			glVertex3f(0, h, 0);
+
+			for (int i = 0; i <= nSeg; i++)
+			{
+				double x = r1 * cos(i * alfa);
+				double z = r1 * sin(i * alfa);
+
+				glTexCoord2f(0.5 + (x / r1) / 4, 0.25 + (z / r1) / 4);
+				glVertex3f(x, h, z);
+			}
+		glEnd();
+
+		glBegin(GL_TRIANGLE_FAN);
+			//glNormal3f(0, -1, 0);
+			glTexCoord2f(0.5, 0.25);
+			glVertex3f(0, 0, 0);
+
+			for (int i = 0; i <= nSeg; i++)
+			{
+				double x = r2 * cos(i * alfa);
+				double z = r2 * sin(i * alfa);
+
+				glTexCoord2f(0.5 + (x / r1) / 4, (z / r1) / 4 + 0.25);
+				glVertex3f(x, 0, z);
+			}
+		glEnd();
+
+
+		glBegin(GL_QUADS);
+			
+			for (int i = 0; i < nSeg; i++)
+			{
+				double x1 = r1 * cos(i * alfa);
+				double z1 = r1 * sin(i * alfa);
+
+				double x2 = r2 * cos(i * alfa);
+				double z2 = r2 * sin(i * alfa);
+
+				double x12 = r1 * cos((i + 1) * alfa);
+				double z12 = r1 * sin((i + 1) * alfa);
+
+				double x22 = r2 * cos((i + 1) * alfa);
+				double z22 = r2 * sin((i + 1) * alfa);
+
+				glTexCoord2f((double)i / nSeg, 1.0);
+				glVertex3f(x1, h, z1);
+
+				glTexCoord2f((double)(i + 1) / nSeg, 1.0);
+				glVertex3f(x12, h, z12);
+
+				glTexCoord2f((double)(i + 1) / nSeg, 0.5);
+				glVertex3f(x22, 0, z22);
+
+				glTexCoord2f((double)i / nSeg, 0.5);
+				glVertex3f(x2, 0, z2);
+			}
+
+		glEnd();
+	}
+	else
+	{
+		glBegin(GL_TRIANGLE_FAN);
+		//glNormal3f(0, -1, 0);
+		glTexCoord2f(0.5, 0.25);
+		glVertex3f(0, 0, 0);
+
+		for (int i = 0; i <= nSeg; i++)
+		{
+			double x = r2 * cos(i * alfa);
+			double z = r2 * sin(i * alfa);
+
+			glTexCoord2f(0.5 + (x / r1) / 4, (z / r1) / 4 + 0.25);
+			glVertex3f(x, 0, z);
+		}
+		glEnd();
+
+		glBegin(GL_QUADS);
+
+		for (int i = 0; i < nSeg; i++)
+		{
+			double x1 = r1 * cos(i * alfa);
+			double z1 = r1 * sin(i * alfa);
+
+			double x2 = r2 * cos(i * alfa);
+			double z2 = r2 * sin(i * alfa);
+
+			double x12 = r1 * cos((i + 1) * alfa);
+			double z12 = r1 * sin((i + 1) * alfa);
+
+			double x22 = r2 * cos((i + 1) * alfa);
+			double z22 = r2 * sin((i + 1) * alfa);
+
+			glTexCoord2f((double)i / nSeg, 1.0);
+			glVertex3f(x1, h, z1);
+
+			glTexCoord2f((double)(i + 1) / nSeg, 1.0);
+			glVertex3f(x12, h, z12);
+
+			glTexCoord2f((double)(i + 1) / nSeg, 0.5);
+			glVertex3f(x22, 0, z22);
+
+			glTexCoord2f((double)i / nSeg, 0.5);
+			glVertex3f(x2, 0, z2);
+		}
+
+		glEnd();
+	}
+}
